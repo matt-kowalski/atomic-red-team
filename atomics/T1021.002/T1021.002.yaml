@@ -61,7 +61,7 @@ atomic_tests:
     command_path:
       description: File to copy and execute
       type: path
-      default: C:\Windows\System32\cmd.exe
+      default: C:\Windows\System32\calc.exe
     remote_host:
       description: Remote computer to receive the copy and execute the file
       type: string
@@ -84,7 +84,10 @@ atomic_tests:
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "#{psexec_exe}" -Force
   executor:
     command: |
-      "#{psexec_exe}" #{remote_host} -accepteula -c #{command_path}
+      #{psexec_exe} #{remote_host} -accepteula -c #{command_path}
+    cleanup_command: |
+      #{psexec_exe} #{remote_host} -accepteula taskkill /f /im win32calc.exe >nul 2>nul
+      #{psexec_exe} #{remote_host} -accepteula taskkill /f /im CalculatorApp.exe >nul 2>nul
     name: command_prompt
     elevation_required: true
 - name: Execute command writing output to local Admin Share
